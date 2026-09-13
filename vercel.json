@@ -1,27 +1,15 @@
 {
-  {
   "version": 2,
   "builds": [
     {
       "src": "server.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": [
-          "*.html",
-          "*.gif",
-          "*.jpg",
-          "*.jpeg",
-          "*.png",
-          "*.json",
-          "*.txt"
-        ]
+        "includeFiles": ["**/*.html", "**/*.gif", "**/*.jpg", "**/*.jpeg", "**/*.png", "**/*.json", "**/*.txt"]
       }
     }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "server.js"
-    }
+    { "src": "/(.*)", "dest": "server.js" }
   ]
 }
