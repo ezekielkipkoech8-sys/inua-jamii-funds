@@ -8,7 +8,8 @@ require('dotenv').config();
      confirmed_payments.json.
    - GET  /webhook/status?reference=XXX : polls confirmed
      payments by reference for the client-side payment page.
-   - GET  /  : health check.
+   - GET  /health : health check.
+   - GET  /  : serves index.html (homepage).
    ============================================================ */
 
 const express = require('express');
@@ -70,8 +71,8 @@ function verifySignature(rawBody, signatureHeader) {
 
 // --- Routes ---------------------------------------------------
 
-// Health check
-app.get('/', (req, res) => {
+// Health check (moved off root so "/" can serve the homepage instead)
+app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'inua-jamii-hashpay-webhook', time: new Date().toISOString() });
 });
 
@@ -79,6 +80,12 @@ app.get('/', (req, res) => {
 // Vercel because the catch-all route forwards every request to server.js, so
 // without this the HTML pages would 404.
 app.use(express.static(path.join(__dirname)));
+
+// Serve index.html at the root explicitly (in case express.static's default
+// index resolution doesn't kick in under Vercel's catch-all routing).
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // Webhook receiver — raw body needed for HMAC verification
 app.post(
