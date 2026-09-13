@@ -1,0 +1,5 @@
+date	size'/'remotesize	flags(request:Update,Range state:File response:Modified,Chunked,gZipped)	statuscode	status ('servermsg')	MIME	Etag|Date	URL	localfile	(from URL)
+02:08:27	3214/3214	---M-Z	200	added ('OK')	text/html	etag:W/%2269c507e8-c8e%22	https://www.inuajamii.com/	C:/My%20Web%20Sites/https___www.inuajamii.com_/www.inuajamii.com/index.html	(from )
+02:08:28	5254/5254	---M-Z	404	error ('Not%20Found')	text/html	etag:W/%226a99a332-24a3%22	https://www.inuajamii.com/robots.txt		(from )
+02:08:28	34111/34111	---M--	200	added ('OK')	image/jpeg	etag:%2269c507e8-853f%22	https://www.inuajamii.com/images.jpg	C:/My%20Web%20Sites/https___www.inuajamii.com_/www.inuajamii.com/images.jpg	(from https://www.inuajamii.com/)
+02:08:28	14663/14663	---M-Z	200	added ('OK')	text/html	etag:W/%2269c507e8-3947%22	https://www.inuajamii.com/index2.html	C:/My%20Web%20Sites/https___www.inuajamii.com_/www.inuajamii.com/index2.html	(from https://www.inuajamii.com/)

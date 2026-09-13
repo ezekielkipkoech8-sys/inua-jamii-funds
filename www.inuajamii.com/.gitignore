@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Local environment secrets — never commit .env
+.env
+
+# Runtime webhook data (contains customer phone numbers) — regenerated on boot
+confirmed_payments.json
+
+# Vercel
+.vercel/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
