@@ -314,15 +314,15 @@
   // Keys verified against index4.html's actual data-value attributes
   // (e.g. the button is data-value="65300" for "Ksh 65,300").
   const FEE_TIERS = {
-    22000: 210,
-    30300: 210,
-    40800: 210,
-    50000: 210,
-    65300: 210,   // verified: index4.html button is Ksh 65,300 (data-value="65300")
-    75000: 210,
-    85000: 210,
-    110000: 310,
-    150000: 310
+    22000: 205,
+    30300: 205,
+    40800: 205,
+    50000: 205,
+    65300: 205,   // verified: index4.html button is Ksh 65,300 (data-value="65300")
+    75000: 205,
+    85000: 205,
+    110000: 305,
+    150000: 305
   };
 
   function getProcessingFee(fundAmount) {
@@ -358,7 +358,7 @@
   fill('val-age', data.age);
 
   // Processing Fee: derived from the fund amount selected on index4.html via FEE_TIERS.
-  // The user is asked to pay the PROCESSING FEE (e.g. Ksh 210 / 310), not the fund amount.
+  // The user is asked to pay the PROCESSING FEE (e.g. Ksh 205 / 305), not the fund amount.
   const processingFee = getProcessingFee(data.fund_amount);
   const feeAmountText = processingFee === null ? '—' : processingFee.toLocaleString();
   const feeText = processingFee === null ? 'Ksh — - Pending' : 'Ksh ' + feeAmountText + ' - Pending';
