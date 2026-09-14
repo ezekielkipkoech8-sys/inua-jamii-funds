@@ -5,7 +5,7 @@ require('dotenv').config();
    - POST /webhook/hashpay : verifies X-Hashpay-Signature
      (HMAC-SHA256 of the RAW request body) and, on a valid
      payment.success event, appends the transaction to
-     confirmed_payments.json.
+     Vercel KV (Redis) under the key "confirmed_payments".
    - GET  /webhook/status?reference=XXX : polls confirmed
      payments by reference for the client-side payment page.
    - GET  /health : health check.
@@ -15,8 +15,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const crypto = require('crypto');
-const fs = require('fs');
 const path = require('path');
+const { kv } = require('@vercel/kv');
 
 // --- Config ---------------------------------------------------
 const PORT = process.env.PORT || 3000;
@@ -28,7 +28,7 @@ if (!process.env.WEBHOOK_SECRET && !process.env.HASHBACK_WEBHOOK_SECRET) {
   console.warn('WARNING: WEBHOOK_SECRET not set — using insecure dev fallback. Set HASHBACK_WEBHOOK_SECRET in .env for production.');
 }
 
-const DATA_FILE = path.join(__dirname, 'confirmed_payments.json');
+const PAYMENTS_KEY = 'confirmed_payments';
 
 const app = express();
 
@@ -41,18 +41,18 @@ app.use(cors());
 // HMAC signature check (which must run over the exact raw bytes).
 
 // --- Helpers --------------------------------------------------
-function readPayments() {
+async function readPayments() {
   try {
-    const raw = fs.readFileSync(DATA_FILE, 'utf8');
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    const payments = await kv.get(PAYMENTS_KEY);
+    return Array.isArray(payments) ? payments : [];
   } catch (e) {
+    console.error('readPayments error:', e);
     return [];
   }
 }
 
-function writePayments(records) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(records, null, 2), 'utf8');
+async function writePayments(records) {
+  await kv.set(PAYMENTS_KEY, records);
 }
 
 // Verify X-Hashpay-Signature = HMAC-SHA256(rawBody, secret)
@@ -91,7 +91,7 @@ app.get('/', (req, res) => {
 app.post(
   '/webhook/hashpay',
   express.raw({ type: 'application/json' }),
-  (req, res) => {
+  async (req, res) => {
     const rawBody = req.body; // Buffer (raw)
     const signature = req.get('X-Hashpay-Signature');
 
@@ -124,22 +124,28 @@ app.post(
       receivedAt: new Date().toISOString()
     };
 
-    const payments = readPayments();
-    payments.push(record);
-    writePayments(payments);
+    try {
+      const payments = await readPayments();
+      payments.push(record);
+      await writePayments(payments);
+    } catch (e) {
+      console.error('Failed to persist payment record:', e);
+      return res.status(500).json({ error: 'failed to persist payment record' });
+    }
 
     res.status(200).json({ received: true, handled: true });
   }
 );
 
 // Status polling endpoint used by payment1.html
-app.get('/webhook/status', (req, res) => {
+app.get('/webhook/status', async (req, res) => {
   const reference = String(req.query.reference || '').trim();
   if (!reference) {
     return res.status(400).json({ error: 'missing reference query param' });
   }
 
-  const match = readPayments().find(p => p.reference === reference);
+  const payments = await readPayments();
+  const match = payments.find(p => p.reference === reference);
 
   if (match) {
     return res.json({ confirmed: true, ...match });
